@@ -75,14 +75,14 @@ int IsExist (char* cmd)
         {
             printf("%s - %s\n", p->cmd, p->desc);
             return 1;
-			break;
+	    break;
         }
         p = p->next;
     }
     if(p == NULL) 
     {
         printf("This is a wrong cmd!\n ");
-		return 0;
+	return 0;
     }
 }
 
