@@ -53,15 +53,14 @@ main()
         char cmd[CMD_MAX_LEN];
         printf("Input a command > ");
         scanf("%s", cmd);
-	if(!strcmp(cmd,"help"))
-	{
-		ShowAllCmd();
-	}
-	else
-	{
-		head->isexist(cmd);
- 	}      
-        
+		if(!strcmp(cmd,"help"))
+		{
+			ShowAllCmd();
+		}
+		else
+		{
+			head->isexist(cmd);
+		}      
     }
 }
 
@@ -75,14 +74,14 @@ int IsExist (char* cmd)
         {
             printf("%s - %s\n", p->cmd, p->desc);
             return 1;
-	    break;
+			break;
         }
         p = p->next;
     }
     if(p == NULL) 
     {
         printf("This is a wrong cmd!\n ");
-	return 0;
+		return 0;
     }
 }
 
