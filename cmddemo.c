@@ -22,8 +22,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int IsExist(char* cmd);
-int ShowAllCmd();
+/*function for logic*/
+int Helper();
 
 #define CMD_MAX_LEN 128
 #define DESC_LEN    1024
@@ -33,18 +33,55 @@ typedef struct DataNode
 {
     char*   cmd;
     char*   desc;
-    int     (*isexist)(char *);
+    int     (*handler)();
     struct  DataNode *next;
 } tDataNode;
 
+int ShowAllCmd(tDataNode* head)
+{	
+    /*show all cmds */
+    printf("Menu List:\n");
+    tDataNode *p = head;
+    while(p != NULL)
+    {
+        printf("%s - %s\n", p->cmd, p->desc);
+        p = p->next;
+    }
+    return 0; 
+}
+
+tDataNode* FindCmd(char* cmd , tDataNode* head)
+{
+    if(cmd == NULL || head == NULL)
+    {
+        return NULL;
+    }    
+    tDataNode *p = head;
+    while(p != NULL)
+    {
+    	if(!strcmp(p->cmd, cmd))
+        {
+            return p;
+			break;
+        }
+        p = p->next;
+    }
+    if(p == NULL) 
+    {
+        return NULL;
+    }
+
+} 
+
 static tDataNode head[] = 
 {
-    {"help", "this is help cmd!", IsExist,&head[1]},
+    {"help", "this is help cmd!", Helper,&head[1]},
     {"version", "cmd demo program v1.0", NULL, &head[2]},
     {"author", "luoxiaobo sse ustc", NULL, &head[3]},
     {"date", "date is 2014 9 11", NULL, &head[4]},
     {"log", "this is cmd log", NULL, NULL}
 };
+
 main()
 {
    /* cmd line begins */
@@ -53,48 +90,26 @@ main()
         char cmd[CMD_MAX_LEN];
         printf("Input a command > ");
         scanf("%s", cmd);
-	if(!strcmp(cmd,"help"))
-	{
-		ShowAllCmd();
-	}
-	else
-	{
-		head->isexist(cmd);
- 	}      
-        
-    }
-}
-
-int IsExist (char* cmd)
-{
-    /*judge if the cmd exist and if yes then print */
-    tDataNode *p = head;
-    while(p != NULL)
-    {
-    	if(!strcmp(p->cmd, cmd))
+        tDataNode* p = FindCmd(cmd,head);
+        if(p!=NULL)
         {
             printf("%s - %s\n", p->cmd, p->desc);
-            return 1;
-	    break;
+            if(p->handler != NULL)
+            {
+                p->handler();
+            }
         }
-        p = p->next;
-    }
-    if(p == NULL) 
-    {
-        printf("This is a wrong cmd!\n ");
-	return 0;
+        else
+        {
+            printf("This is a wrong cmd!\n ");
+        }       
     }
 }
 
-int ShowAllCmd()
-{	
-    /*show all cmds */
-    printf("Menu List:\n");
-    tDataNode *p = head;
-    while(p != NULL)
-    {
-        printf("%s\n", p->cmd);
-        p = p->next;
-    }
-    return 0; 
+int Helper ()
+{    
+    ShowAllCmd(head);
+    return 0;
 }
+
+
